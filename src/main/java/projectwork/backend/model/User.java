@@ -23,9 +23,11 @@ public class User {
     private String fullName;
 
     @Email
+    @Column(name = "email")
     private String email;
 
     public User(String fullName, String email){
+        super();
         this.fullName = fullName;
         this.email = email;
     }

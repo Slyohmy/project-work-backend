@@ -36,4 +36,14 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody User user){
         return userService.registerUser(user);
     }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getEmployeeById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id){
+        return userService.deleteUserById(id);
+    }
 }

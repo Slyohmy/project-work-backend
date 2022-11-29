@@ -3,8 +3,12 @@ package projectwork.backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 import projectwork.backend.model.User;
 import projectwork.backend.repository.UserRepository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -25,5 +29,21 @@ public class UserService {
         userRepository.save(user);
         return ResponseEntity.ok("Congratsulations " + user.getFullName() +
                 ", you've successfully registered an account.");
+    }
+
+    public ResponseEntity<User> getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id :" + id + " does not exist."));
+        return ResponseEntity.ok(user);
+    }
+
+    public ResponseEntity<?> deleteUserById(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id :" + id + " does not exist."));
+
+        userRepository.delete(user);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
     }
 }
