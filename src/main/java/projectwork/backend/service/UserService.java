@@ -20,9 +20,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<?> registerUser(User user){
-        if (userRepository.findByEmail(user.getEmail()).isPresent()){
-            return ResponseEntity.badRequest().body("Email already exists.");
+    public ResponseEntity<?> registerUser(User user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email '" + user.getEmail() + "' already exists.");
         }
 
         user = new User(user.getFullName(), user.getEmail());
@@ -31,15 +31,28 @@ public class UserService {
                 ", you've successfully registered an account.");
     }
 
+    public ResponseEntity<?> updateUser(Long id, User user) {
+        if (userRepository.findById(id).isPresent()) {
+            user.setFullName(user.getFullName());
+            user.setEmail(user.getEmail());
+
+            userRepository.save(user);
+            return ResponseEntity.ok(user);
+
+        }
+        return ResponseEntity.badRequest().body("User with id '" + id + "' does not exist.");
+
+    }
+
     public ResponseEntity<User> getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id :" + id + " does not exist."));
+                .orElseThrow(() -> new NotFoundException("User with id '" + id + "' does not exist."));
         return ResponseEntity.ok(user);
     }
 
-    public ResponseEntity<?> deleteUserById(Long id){
+    public ResponseEntity<?> deleteUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id :" + id + " does not exist."));
+                .orElseThrow(() -> new NotFoundException("User with id '" + id + "' does not exist."));
 
         userRepository.delete(user);
         Map<String, Boolean> response = new HashMap<>();

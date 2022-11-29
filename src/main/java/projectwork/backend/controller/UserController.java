@@ -12,7 +12,7 @@ import projectwork.backend.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/user")
 @Tag(name = "User")
 public class UserController {
 
@@ -27,23 +27,31 @@ public class UserController {
 
     @GetMapping("/users")
     @Operation(summary = "Get all users")
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user")
-    public ResponseEntity<?> registerUser(@RequestBody User user){
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
-    @GetMapping("/user/{id}")
-    public ResponseEntity<User> getEmployeeById(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    @Operation(summary = "Get user by Id")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
+    @PutMapping("/update_profile/{id}")
+    @Operation(summary = "Update a user profile")
+    public ResponseEntity<?> updateUser(@RequestParam Long id,
+                                        @RequestBody User user) {
+        return userService.updateUser(id, user);
+    }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUserById(@PathVariable Long id){
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         return userService.deleteUserById(id);
     }
 }
