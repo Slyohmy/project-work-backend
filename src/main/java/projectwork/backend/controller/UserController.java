@@ -12,7 +12,7 @@ import projectwork.backend.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 @Tag(name = "User")
 public class UserController {
 
@@ -33,7 +33,7 @@ public class UserController {
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
         return userService.registerUser(user);
     }
 

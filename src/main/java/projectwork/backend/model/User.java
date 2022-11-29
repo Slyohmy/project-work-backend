@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -15,7 +17,7 @@ import javax.validation.constraints.Email;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private long id;
 
@@ -25,6 +27,11 @@ public class User {
     @Email
     @Column(name = "email")
     private String email;
+
+    private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Role> roles = new HashSet<>();
 
     public User(String fullName, String email) {
         super();

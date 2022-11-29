@@ -20,7 +20,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<?> registerUser(User user) {
+    public ResponseEntity<String> registerUser(User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body("Email '" + user.getEmail() + "' already exists.");
         }
