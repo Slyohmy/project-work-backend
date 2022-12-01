@@ -3,6 +3,7 @@ package projectwork.backend.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -30,12 +31,14 @@ public class User {
 
     private String password;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles = new HashSet<>();
 
-    public User(String fullName, String email) {
+    public User(String fullName, String email, String password) {
         super();
         this.fullName = fullName;
         this.email = email;
+        this.password = password;
     }
 }

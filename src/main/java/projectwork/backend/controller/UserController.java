@@ -31,10 +31,16 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register_user")
     @Operation(summary = "Register a new user")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         return userService.registerUser(user);
+    }
+
+    @PostMapping("/register_admin")
+    @Operation(summary = "Register a new admin")
+    public ResponseEntity<String> registerAdmin(@RequestBody User user) {
+        return userService.registerAdmin(user);
     }
 
     @GetMapping("/{id}")
