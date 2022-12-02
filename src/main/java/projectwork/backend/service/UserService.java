@@ -56,13 +56,13 @@ public class UserService {
 
         }
         return ResponseEntity.badRequest().body("User with id '" + id + "' does not exist.");
-
     }
 
-    public ResponseEntity<User> getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id '" + id + "' does not exist."));
-        return ResponseEntity.ok(user);
+    public ResponseEntity<?> getUserById(Long id) {
+        return ResponseEntity.ok().body(userRepository.findById(id)
+                .stream()
+                .map(User::userInfoResponse)
+                .collect(Collectors.toList()));
     }
 
     public ResponseEntity<?> deleteUserById(Long id) {

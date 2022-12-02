@@ -1,8 +1,5 @@
 package projectwork.backend.security;
 
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +25,11 @@ import javax.servlet.Filter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     private final UserDetailsServiceImpl userDetailsService;
-
     private final AuthEntryPointJwt unauthorizedHandler;
+    private static final String[] WHITELIST = {
+            "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/api/v1/**"
+    };
 
     @Bean
     public Filter authenticationJwtTokenFilter() {
@@ -60,35 +58,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers(SWAGGER_WHITELIST).permitAll()
+                .authorizeRequests().antMatchers(WHITELIST).permitAll()
                 .antMatchers("/api/v1/login").permitAll()
                 .anyRequest().authenticated();
 
         http.headers().frameOptions().sameOrigin();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-    }
-
-
-    private static final String[] SWAGGER_WHITELIST = {
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/api/v1/**"
-    };
-
-
-    @Bean
-    public OpenAPI customizeOpenAPI() {
-        final String securitySchemeName = "bearerAuth";
-        return new OpenAPI()
-                .addSecurityItem(new SecurityRequirement()
-                        .addList(securitySchemeName))
-                .components(new Components()
-                        .addSecuritySchemes(securitySchemeName, new io.swagger.v3.oas.models.security.SecurityScheme()
-                                .name(securitySchemeName)
-                                .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")));
     }
 }

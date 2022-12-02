@@ -14,41 +14,37 @@ import projectwork.backend.service.UserService;
 @RequestMapping("/api/v1/user")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "User")
+@PreAuthorize("hasRole('ADMIN')")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping("/users")
     @Operation(summary = "Get all users")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers() {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Get user by Id")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
     @PostMapping("/register_user")
     @Operation(summary = "Register a new user")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
     @PostMapping("/register_admin")
     @Operation(summary = "Register a new admin")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> registerAdmin(@RequestBody User user) {
         return userService.registerAdmin(user);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get user by Id")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
-    }
-
     @PutMapping("/update_profile/{id}")
     @Operation(summary = "Update a user profile")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@RequestParam Long id,
                                         @RequestBody User user) {
         return userService.updateUser(id, user);
@@ -56,7 +52,6 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete a user")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         return userService.deleteUserById(id);
     }
