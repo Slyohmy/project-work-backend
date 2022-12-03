@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import projectwork.backend.model.User;
+import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.service.UserService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,16 +34,10 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @PostMapping("/register_user")
-    @Operation(summary = "Register a new user")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
-        return userService.registerUser(user);
-    }
-
-    @PostMapping("/register_admin")
-    @Operation(summary = "Register a new admin")
-    public ResponseEntity<String> registerAdmin(@RequestBody User user) {
-        return userService.registerAdmin(user);
+    @PostMapping("/register")
+    @Operation(summary = "Register a new account")
+    public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signupRequest){
+        return userService.registerUser(signupRequest);
     }
 
     @PutMapping("/update_profile/{id}")

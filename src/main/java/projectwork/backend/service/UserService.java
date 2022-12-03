@@ -8,12 +8,11 @@ import org.webjars.NotFoundException;
 import projectwork.backend.model.enums.ERole;
 import projectwork.backend.model.Role;
 import projectwork.backend.model.User;
+import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.repository.RoleRepository;
 import projectwork.backend.repository.UserRepository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,20 +28,6 @@ public class UserService {
                 .stream()
                 .map(User::userInfoResponse)
                 .collect(Collectors.toList()));
-    }
-
-    public ResponseEntity<String> registerUser(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email '" + user.getEmail() + "' already exists.");
-        }
-        user = new User(user.getUsername(), user.getEmail(), passwordEncoder.encode(user.getPassword()));
-
-        Optional<Role> role = roleRepository.findByRole(ERole.ROLE_USER);
-        user.getRoles().add(role.get());
-
-        userRepository.save(user);
-        return ResponseEntity.ok("Congratsulations " + user.getUsername() +
-                ", you've successfully registered an account.");
     }
 
     public ResponseEntity<?> updateUser(Long id, User user) {
@@ -75,19 +60,50 @@ public class UserService {
         return ResponseEntity.ok(response);
     }
 
-
-    public ResponseEntity<String> registerAdmin(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email '" + user.getEmail() + "' already exists.");
-        }
-
+    public void registerAdmin(User user) {
         user = new User(user.getUsername(), user.getEmail(), passwordEncoder.encode(user.getPassword()));
-
         Optional<Role> role = roleRepository.findByRole(ERole.ROLE_ADMIN);
         user.getRoles().add(role.get());
-
         userRepository.save(user);
-        return ResponseEntity.ok("Congratsulations " + user.getUsername() +
+    }
+
+    public ResponseEntity<String> registerUser(SignupRequest signUpRequest) {
+        if (userRepository.findByUsername(signUpRequest.getUsername()).isPresent()) {
+            return ResponseEntity.badRequest().body("Username '" + signUpRequest.getUsername() + "' already exists.");
+        }
+        if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email '" + signUpRequest.getEmail() + "' already exists.");
+        }
+
+        User user = new User(signUpRequest.getUsername(),
+                signUpRequest.getEmail(),
+                passwordEncoder.encode(signUpRequest.getPassword()));
+
+        Set<String> strRoles = signUpRequest.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByRole(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                if (role.equals("admin")) {
+                    Role adminRole = roleRepository.findByRole(ERole.ROLE_ADMIN)
+                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    roles.add(adminRole);
+                } else {
+                    Role userRole = roleRepository.findByRole(ERole.ROLE_USER)
+                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    roles.add(userRole);
+                }
+            });
+
+            user.setRoles(roles);
+            userRepository.save(user);
+        }
+
+        return ResponseEntity.ok("Congratsulations " + signUpRequest.getUsername() +
                 ", you've successfully registered an account.");
     }
 }
