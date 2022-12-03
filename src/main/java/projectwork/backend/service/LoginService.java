@@ -46,4 +46,10 @@ public class LoginService {
                         userDetails.getEmail(),
                         roles));
     }
+
+    public ResponseEntity<?> logout() {
+        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("Logged out");
+    }
 }

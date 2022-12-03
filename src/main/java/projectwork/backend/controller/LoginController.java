@@ -11,15 +11,20 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/login")
+@RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Login")
+@Tag(name = "Auth")
 public class LoginController {
 
     private final LoginService loginService;
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest){
         return loginService.authenticateUser(loginRequest);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return loginService.logout();
     }
 }
