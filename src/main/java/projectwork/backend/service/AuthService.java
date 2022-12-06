@@ -9,23 +9,33 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import projectwork.backend.model.Role;
+import projectwork.backend.model.User;
+import projectwork.backend.model.enums.ERole;
 import projectwork.backend.payload.LoginRequest;
 import projectwork.backend.payload.UserInfoResponse;
+import projectwork.backend.repository.RoleRepository;
+import projectwork.backend.repository.UserRepository;
 import projectwork.backend.security.Jwt.JwtUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
-public class LoginService {
+public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
-    public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
+    public ResponseEntity<UserInfoResponse> authenticateUser(LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -51,5 +61,19 @@ public class LoginService {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body("Logged out");
+    }
+
+    public ResponseEntity<?> signUp(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return ResponseEntity.badRequest().body("Username '" + user.getUsername() + "' already exists.");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email '" + user.getEmail() + "' already exists.");
+        }
+        user = new User(user.getUsername(), user.getEmail(), passwordEncoder.encode(user.getPassword()));
+        Optional<Role> role = roleRepository.findByRole(ERole.ROLE_USER);
+        user.getRoles().add(role.get());
+        userRepository.save(user);
+    return ResponseEntity.ok().body(user);
     }
 }
