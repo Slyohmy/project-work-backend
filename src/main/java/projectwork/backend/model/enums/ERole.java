@@ -1,4 +1,4 @@
-package projectwork.backend.enums;
+package projectwork.backend.model.enums;
 
 public enum ERole {
 
