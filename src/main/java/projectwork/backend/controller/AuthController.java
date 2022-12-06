@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import projectwork.backend.model.User;
 import projectwork.backend.payload.LoginRequest;
+import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.payload.UserInfoResponse;
 import projectwork.backend.service.AuthService;
 
@@ -24,18 +24,20 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserInfoResponse> login(@Valid @RequestBody LoginRequest loginRequest){
+    @Operation(summary = "Login with an existing account")
+    public ResponseEntity<UserInfoResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return authService.authenticateUser(loginRequest);
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "Logout")
     public ResponseEntity<?> logout() {
         return authService.logout();
     }
 
     @PostMapping("/register")
-    @Operation(summary = "Register a new account")
-    public ResponseEntity<?> signUp(@Valid @RequestBody User user){
-        return authService.signUp(user);
+    @Operation(summary = "Register a new user account")
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
+        return authService.signup(signupRequest);
     }
 }

@@ -15,6 +15,7 @@ import projectwork.backend.model.Role;
 import projectwork.backend.model.User;
 import projectwork.backend.model.enums.ERole;
 import projectwork.backend.payload.LoginRequest;
+import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.payload.UserInfoResponse;
 import projectwork.backend.repository.RoleRepository;
 import projectwork.backend.repository.UserRepository;
@@ -63,17 +64,18 @@ public class AuthService {
                 .body("Logged out");
     }
 
-    public ResponseEntity<?> signUp(User user) {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username '" + user.getUsername() + "' already exists.");
+    public ResponseEntity<String> signup(SignupRequest signupRequest) {
+        if (userRepository.findByUsername(signupRequest.getUsername()).isPresent()) {
+            return ResponseEntity.badRequest().body("Username '" + signupRequest.getUsername() + "' already exists.");
         }
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email '" + user.getEmail() + "' already exists.");
+        if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email '" + signupRequest.getEmail() + "' already exists.");
         }
-        user = new User(user.getUsername(), user.getEmail(), passwordEncoder.encode(user.getPassword()));
+        User user = new User(signupRequest.getUsername(), signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()));
         Optional<Role> role = roleRepository.findByRole(ERole.ROLE_USER);
         user.getRoles().add(role.get());
         userRepository.save(user);
-    return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok("Congratsulations " + signupRequest.getUsername() +
+                ", you've successfully registered an account.");
     }
 }

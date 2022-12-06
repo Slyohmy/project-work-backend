@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @Operation(summary = "Register a new account")
+    @Operation(summary = "Create new user or admin account")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signupRequest){
         return userService.registerUser(signupRequest);
     }

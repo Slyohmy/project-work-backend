@@ -103,7 +103,7 @@ public class UserService {
             userRepository.save(user);
         }
 
-        return ResponseEntity.ok("Congratsulations " + signUpRequest.getUsername() +
-                ", you've successfully registered an account.");
+        return ResponseEntity.ok("New account: " + signUpRequest.getUsername() +
+                " has been successfully created.");
     }
 }
