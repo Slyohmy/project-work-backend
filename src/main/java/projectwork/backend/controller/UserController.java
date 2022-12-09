@@ -11,6 +11,7 @@ import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.service.UserService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,13 +25,13 @@ public class UserController {
 
     @GetMapping("/users")
     @Operation(summary = "Get all users")
-    public ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<List> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by Id")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    public ResponseEntity<List> getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 

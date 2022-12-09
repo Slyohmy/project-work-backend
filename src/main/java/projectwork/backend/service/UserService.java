@@ -23,7 +23,7 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<List> getAllUsers() {
         return ResponseEntity.ok().body(userRepository.findAll()
                 .stream()
                 .map(User::userInfoResponse)
@@ -43,7 +43,7 @@ public class UserService {
         return ResponseEntity.badRequest().body("User with id '" + id + "' does not exist.");
     }
 
-    public ResponseEntity<?> getUserById(Long id) {
+    public ResponseEntity<List> getUserById(Long id) {
         return ResponseEntity.ok().body(userRepository.findById(id)
                 .stream()
                 .map(User::userInfoResponse)
