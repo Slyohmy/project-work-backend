@@ -44,11 +44,11 @@ public class UserService {
         return ResponseEntity.badRequest().body("User with id '" + user.getId() + "' does not exist.");
     }
 
-    public ResponseEntity<List> getUserById(Long id) {
-        return ResponseEntity.ok().body(userRepository.findById(id)
+    public List<UserInfoResponse> getUserById(Long id) {
+        return userRepository.findById(id)
                 .stream()
                 .map(User::userInfoResponse)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
     public ResponseEntity<?> deleteUserById(Long id) {

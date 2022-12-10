@@ -58,7 +58,16 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserById() {
+    void getUserById() throws Exception{
+        userInfoResponse1 = new UserInfoResponse(1L, "testuser1", "test@user2.se", null);
+        List<UserInfoResponse> userList = Arrays.asList(userInfoResponse1);
+        given(service.getUserById(Mockito.any())).willReturn(userList);
+
+        mvc.perform(get("/api/v1/user/1").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].username", is(userInfoResponse1.getUsername())));
+        verify(service, VerificationModeFactory.times(1)).getUserById(Mockito.any());
+        reset(service);
     }
 
     @Test
