@@ -9,6 +9,7 @@ import projectwork.backend.model.enums.ERole;
 import projectwork.backend.model.Role;
 import projectwork.backend.model.User;
 import projectwork.backend.payload.SignupRequest;
+import projectwork.backend.payload.UserInfoResponse;
 import projectwork.backend.repository.RoleRepository;
 import projectwork.backend.repository.UserRepository;
 
@@ -23,24 +24,24 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<List> getAllUsers() {
-        return ResponseEntity.ok().body(userRepository.findAll()
-                .stream()
+    public List<UserInfoResponse> getAllUsers() {
+        return userRepository
+                .findAll().stream()
                 .map(User::userInfoResponse)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> updateUser(Long id, User user) {
+    public ResponseEntity<String> updateUser(Long id, User user) {
         if (userRepository.findById(id).isPresent()) {
             user.setUsername(user.getUsername());
             user.setEmail(user.getEmail());
             passwordEncoder.encode(user.getPassword());
 
             userRepository.save(user);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok().body("User: " + user.getUsername() + " was successfully updated.");
 
         }
-        return ResponseEntity.badRequest().body("User with id '" + id + "' does not exist.");
+        return ResponseEntity.badRequest().body("User with id '" + user.getId() + "' does not exist.");
     }
 
     public ResponseEntity<List> getUserById(Long id) {
@@ -67,12 +68,12 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public ResponseEntity<String> registerUser(SignupRequest signUpRequest) {
+    public User registerUser(SignupRequest signUpRequest) {
         if (userRepository.findByUsername(signUpRequest.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username '" + signUpRequest.getUsername() + "' already exists.");
+            throw new RuntimeException("Username '" + signUpRequest.getUsername() + "' already exists.");
         }
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email '" + signUpRequest.getEmail() + "' already exists.");
+            throw new RuntimeException("Email '" + signUpRequest.getEmail() + "' already exists.");
         }
 
         User user = new User(signUpRequest.getUsername(),
@@ -102,8 +103,6 @@ public class UserService {
             user.setRoles(roles);
             userRepository.save(user);
         }
-
-        return ResponseEntity.ok("New account: " + signUpRequest.getUsername() +
-                " has been successfully created.");
+        return user;
     }
 }

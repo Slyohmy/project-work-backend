@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -45,10 +46,10 @@ class UserServiceTest {
     void setUp() {
         userService = new UserService(userRepository, roleRepository, passwordEncoder);
         user = new User("testuser1", "testuser1@gmail.com", "123123");
+        user.setId(1L);
         user2 = new User("testuser2", "testuser2@gmail.com", "123123");
         signupRequest = new SignupRequest(user.getUsername(), user.getEmail(), user.getPassword(), null);
     }
-
 
     @Test
     void getAllUsers() {
@@ -57,7 +58,7 @@ class UserServiceTest {
         userList.add(user2);
 
         when(userRepository.findAll()).thenReturn(userList);
-        ResponseEntity<List> newList = userService.getAllUsers();
+        ResponseEntity<List> newList = (ResponseEntity<List>) userService.getAllUsers();
 
         System.out.println(newList.getBody().size());
         System.out.println(userList.size());
@@ -67,6 +68,25 @@ class UserServiceTest {
 
     @Test
     void updateUser() {
+
+
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+
+        ArgumentCaptor<User> userArgument =
+                ArgumentCaptor.forClass(User.class);
+
+        // When
+        User newUser = new User();
+        newUser.setUsername("hejhej");
+        newUser.setPassword(user.getPassword());
+        ResponseEntity<String> updatedUser = this.userService.updateUser(user.getId(), newUser);
+
+        System.out.println(updatedUser.getBody());
+        System.out.println(userArgument.getAllValues());
+        System.out.println(newUser.getUsername());
+        System.out.println(newUser.userInfoResponse());
+        // Then
+        assertEquals(updatedUser.getBody(), userArgument);
     }
 
     @Test
@@ -93,15 +113,13 @@ class UserServiceTest {
     @Disabled("Needs to be fixed")
     void registerUser() {
 
-
         User newUser = new User(signupRequest.getUsername(), signupRequest.getEmail(), signupRequest.getPassword());
         doReturn(Optional.of(newUser)).when(userRepository).findByUsername(newUser.getUsername());
-        ResponseEntity<String> responseEntity = userService.registerUser(signupRequest);
+        User responseEntity = userService.registerUser(signupRequest);
 
         //DEBUG
         System.out.println(signupRequest.getRole());
-        System.out.println(responseEntity.getBody());
-
+        System.out.println(responseEntity);
 
         //assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         //assertEquals(responseEntity.getBody(), signupRequest);

@@ -26,7 +26,7 @@ public class UserController {
     @GetMapping("/users")
     @Operation(summary = "Get all users")
     public ResponseEntity<List> getAllUsers() {
-        return userService.getAllUsers();
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
@@ -38,12 +38,14 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "Create new user or admin account")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signupRequest){
-        return userService.registerUser(signupRequest);
+        userService.registerUser(signupRequest);
+        return ResponseEntity.ok("New account: " + signupRequest.getUsername() +
+                " has been successfully created.");
     }
 
     @PutMapping("/update_profile/{id}")
     @Operation(summary = "Update a user profile")
-    public ResponseEntity<?> updateUser(@RequestParam Long id,
+    public ResponseEntity<String> updateUser(@RequestParam Long id,
                                         @RequestBody User user) {
         return userService.updateUser(id, user);
     }
