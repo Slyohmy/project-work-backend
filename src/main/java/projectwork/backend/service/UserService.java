@@ -1,14 +1,14 @@
 package projectwork.backend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
-import projectwork.backend.model.enums.ERole;
 import projectwork.backend.model.Role;
 import projectwork.backend.model.User;
+import projectwork.backend.model.enums.ERole;
 import projectwork.backend.payload.SignupRequest;
+import projectwork.backend.payload.UserInfoResponse;
 import projectwork.backend.repository.RoleRepository;
 import projectwork.backend.repository.UserRepository;
 
@@ -23,41 +23,38 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok().body(userRepository.findAll()
-                .stream()
+    public List<UserInfoResponse> getAllUsers() {
+        return userRepository
+                .findAll().stream()
                 .map(User::userInfoResponse)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> updateUser(Long id, User user) {
+    public String updateUser(Long id, User user) {
         if (userRepository.findById(id).isPresent()) {
             user.setUsername(user.getUsername());
             user.setEmail(user.getEmail());
             passwordEncoder.encode(user.getPassword());
-
             userRepository.save(user);
-            return ResponseEntity.ok(user);
-
+            return "Update was successful!";
         }
-        return ResponseEntity.badRequest().body("User with id '" + id + "' does not exist.");
+        throw new RuntimeException("User with id '" + user.getId() + "' does not exist.");
     }
 
-    public ResponseEntity<?> getUserById(Long id) {
-        return ResponseEntity.ok().body(userRepository.findById(id)
+    public List<UserInfoResponse> getUserById(Long id) {
+        return userRepository.findById(id)
                 .stream()
                 .map(User::userInfoResponse)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> deleteUserById(Long id) {
+    public Map<String, Boolean> deleteUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id '" + id + "' does not exist."));
-
         userRepository.delete(user);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     public void registerAdmin(User user) {
@@ -67,12 +64,12 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public ResponseEntity<String> registerUser(SignupRequest signUpRequest) {
+    public User registerUser(SignupRequest signUpRequest) {
         if (userRepository.findByUsername(signUpRequest.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username '" + signUpRequest.getUsername() + "' already exists.");
+            throw new RuntimeException("Username '" + signUpRequest.getUsername() + "' already exists.");
         }
         if (userRepository.findByEmail(signUpRequest.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email '" + signUpRequest.getEmail() + "' already exists.");
+            throw new RuntimeException("Email '" + signUpRequest.getEmail() + "' already exists.");
         }
 
         User user = new User(signUpRequest.getUsername(),
@@ -102,8 +99,6 @@ public class UserService {
             user.setRoles(roles);
             userRepository.save(user);
         }
-
-        return ResponseEntity.ok("Congratsulations " + signUpRequest.getUsername() +
-                ", you've successfully registered an account.");
+        return user;
     }
 }

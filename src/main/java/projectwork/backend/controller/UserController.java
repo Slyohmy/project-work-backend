@@ -11,6 +11,8 @@ import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.service.UserService;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,32 +26,34 @@ public class UserController {
 
     @GetMapping("/users")
     @Operation(summary = "Get all users")
-    public ResponseEntity<?> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by Id")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<List> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping("/register")
-    @Operation(summary = "Register a new account")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signupRequest){
-        return userService.registerUser(signupRequest);
+    @Operation(summary = "Create new user or admin account")
+    public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+        userService.registerUser(signupRequest);
+        return ResponseEntity.ok("New account: " + signupRequest.getUsername() +
+                " has been successfully created.");
     }
 
     @PutMapping("/update_profile/{id}")
     @Operation(summary = "Update a user profile")
-    public ResponseEntity<?> updateUser(@RequestParam Long id,
-                                        @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public ResponseEntity<String> updateUser(@PathVariable(value = "id", required = false) Long id,
+                                             @RequestBody User user) {
+        return ResponseEntity.ok(userService.updateUser(id, user));
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete a user")
-    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
-        return userService.deleteUserById(id);
+    public ResponseEntity<Map<String, Boolean>> deleteUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.deleteUserById(id));
     }
 }

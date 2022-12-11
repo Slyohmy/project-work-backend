@@ -1,5 +1,6 @@
 package projectwork.backend.payload;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
 public class SignupRequest {
 
     @NotBlank
@@ -18,10 +20,10 @@ public class SignupRequest {
     @Size(max = 50)
     @Email
     private String email;
-    
-    private Set<String> role;
-    
+
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
+
+    private Set<String> role;
 }
