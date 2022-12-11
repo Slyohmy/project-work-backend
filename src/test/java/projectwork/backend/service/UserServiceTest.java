@@ -50,7 +50,7 @@ class UserServiceTest {
 
         // When
         User newUser = new User();
-        newUser.setUsername("hejhej");
+        newUser.setUsername("testname");
         String updatedUser = this.userService.updateUser(user.getId(), newUser);
 
         System.out.println(updatedUser);
@@ -64,7 +64,7 @@ class UserServiceTest {
     @Test
     @Disabled("Needs to be fixed")
     void getUserById() {
-        UserInfoResponse userInfoResponse = new UserInfoResponse(1L, "testuser1@gmail.com", "123123",null);
+        UserInfoResponse userInfoResponse = new UserInfoResponse(1L, "testuser1@gmail.com", "123123", null);
         List<UserInfoResponse> userList = new ArrayList<>();
         userList.add(userInfoResponse);
 

@@ -16,9 +16,7 @@ import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.payload.UserInfoResponse;
 import projectwork.backend.service.UserService;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -58,7 +56,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserById() throws Exception{
+    void getUserById() throws Exception {
         userInfoResponse1 = new UserInfoResponse(1L, "testuser1", "test@user2.se", Collections.singletonList("ROLE_USER"));
         List<UserInfoResponse> userList = Arrays.asList(userInfoResponse1);
         given(service.getUserById(Mockito.any())).willReturn(userList);
@@ -87,12 +85,27 @@ class UserControllerTest {
     void updateUser() throws Exception {
         user = new User("test", "test@test.se", "123123");
         user.setId(1L);
-        given(service.updateUser(Mockito.anyLong(),Mockito.any())).willReturn("Update was successful!");
+        given(service.updateUser(Mockito.anyLong(), Mockito.any())).willReturn("Update was successful!");
 
         mvc.perform(put("/api/v1/user/update_profile/1").contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(user))).andExpect(status().isOk())
                 .andExpect(jsonPath("$", is("Update was successful!")));
         verify(service, VerificationModeFactory.times(1)).updateUser(Mockito.anyLong(), Mockito.any());
+        reset(service);
+    }
+
+    @Test
+    void deleteUserById() throws Exception {
+        user = new User("test", "test@test.se", "123123");
+        user.setId(1L);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        given(service.deleteUserById(Mockito.anyLong())).willReturn(response);
+
+        mvc.perform(delete("/api/v1/user/delete/1").contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(user))).andExpect(status().isOk())
+                .andExpect(jsonPath("$", is(response)));
+        verify(service, VerificationModeFactory.times(1)).deleteUserById(Mockito.anyLong());
         reset(service);
     }
 }

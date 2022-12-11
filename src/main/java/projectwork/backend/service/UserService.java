@@ -1,13 +1,12 @@
 package projectwork.backend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
-import projectwork.backend.model.enums.ERole;
 import projectwork.backend.model.Role;
 import projectwork.backend.model.User;
+import projectwork.backend.model.enums.ERole;
 import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.payload.UserInfoResponse;
 import projectwork.backend.repository.RoleRepository;
@@ -49,14 +48,13 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<?> deleteUserById(Long id) {
+    public Map<String, Boolean> deleteUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id '" + id + "' does not exist."));
-
         userRepository.delete(user);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
+        return response;
     }
 
     public void registerAdmin(User user) {
