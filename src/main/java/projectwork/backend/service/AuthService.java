@@ -64,18 +64,18 @@ public class AuthService {
                 .body("Logged out");
     }
 
-    public ResponseEntity<String> signup(SignupRequest signupRequest) {
+    public String signup(SignupRequest signupRequest) {
         if (userRepository.findByUsername(signupRequest.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username '" + signupRequest.getUsername() + "' already exists.");
+            throw new RuntimeException("Username '" + signupRequest.getUsername() + "' already exists.");
         }
         if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email '" + signupRequest.getEmail() + "' already exists.");
+            throw new RuntimeException("Email '" + signupRequest.getEmail() + "' already exists.");
         }
         User user = new User(signupRequest.getUsername(), signupRequest.getEmail(), passwordEncoder.encode(signupRequest.getPassword()));
         Optional<Role> role = roleRepository.findByRole(ERole.ROLE_USER);
         user.getRoles().add(role.get());
         userRepository.save(user);
-        return ResponseEntity.ok("Congratsulations " + signupRequest.getUsername() +
-                ", you've successfully registered an account.");
+        return "Congratsulations " + signupRequest.getUsername() +
+                ", you've successfully registered an account.";
     }
 }
