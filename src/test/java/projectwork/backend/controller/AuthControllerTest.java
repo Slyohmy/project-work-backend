@@ -45,6 +45,7 @@ class AuthControllerTest {
     private AuthenticationManager authenticationManager;
     static String registerUrl;
     static String loginUrl;
+    static String logoutUrl;
     static UserInfoResponse userInfoResponse;
     static SignupRequest signupRequest;
     static User user;
@@ -53,6 +54,7 @@ class AuthControllerTest {
     void setUp() {
         registerUrl = "http://localhost:8080/api/v1/register";
         loginUrl = "http://localhost:8080/api/v1/login";
+        logoutUrl = "http://localhost:8080/api/v1/logout";
     }
 
     @Test
@@ -67,7 +69,7 @@ class AuthControllerTest {
 
         given(service.authenticateUser(Mockito.any())).willReturn((ResponseEntity<UserInfoResponse>) authentication);
 
-        mvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(post(loginUrl).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andExpect(jsonPath("$", is(userInfoResponse)));
         verify(service, VerificationModeFactory.times(1)).authenticateUser(loginRequest);
         reset(service);
@@ -83,7 +85,7 @@ class AuthControllerTest {
         user = new User(signupRequest.getUsername(), signupRequest.getEmail(), signupRequest.getPassword());
         given(service.signup(Mockito.any())).willReturn("Congratsulations " + signupRequest.getUsername() + ", you've successfully registered an account.");
 
-        mvc.perform(post("/api/v1/auth/register").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post(registerUrl).contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(user))).andExpect(status().isOk())
                 .andExpect(jsonPath("$", is("Congratsulations " + signupRequest.getUsername() + ", you've successfully registered an account.")));
         verify(service, VerificationModeFactory.times(1)).signup(Mockito.any());
