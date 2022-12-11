@@ -45,9 +45,9 @@ public class UserController {
 
     @PutMapping("/update_profile/{id}")
     @Operation(summary = "Update a user profile")
-    public ResponseEntity<String> updateUser(@RequestParam Long id,
+    public ResponseEntity<String> updateUser(@PathVariable(value = "id", required = false) Long id,
                                         @RequestBody User user) {
-        return userService.updateUser(id, user);
+        return ResponseEntity.ok(userService.updateUser(id, user));
     }
 
     @DeleteMapping("/delete/{id}")

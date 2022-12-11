@@ -7,7 +7,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import projectwork.backend.model.User;
 import projectwork.backend.payload.SignupRequest;
@@ -52,14 +51,14 @@ class UserServiceTest {
         // When
         User newUser = new User();
         newUser.setUsername("hejhej");
-        ResponseEntity<String> updatedUser = this.userService.updateUser(user.getId(), newUser);
+        String updatedUser = this.userService.updateUser(user.getId(), newUser);
 
-        System.out.println(updatedUser.getBody());
+        System.out.println(updatedUser);
         System.out.println(userArgument.getAllValues());
         System.out.println(newUser.getUsername());
         System.out.println(newUser.userInfoResponse());
         // Then
-        assertEquals(updatedUser.getBody(), userArgument);
+        assertEquals(updatedUser, userArgument);
     }
 
     @Test

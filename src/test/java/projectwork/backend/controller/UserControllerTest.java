@@ -17,6 +17,7 @@ import projectwork.backend.payload.UserInfoResponse;
 import projectwork.backend.service.UserService;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -24,8 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,8 +44,8 @@ class UserControllerTest {
 
     @Test
     void getAllUsers() throws Exception {
-        userInfoResponse1 = new UserInfoResponse(1L, "testuser1", "test@user2.se", null);
-        userInfoResponse2 = new UserInfoResponse(2L, "testuser2", "test@user2.se", null);
+        userInfoResponse1 = new UserInfoResponse(1L, "testuser1", "test@user2.se", Collections.singletonList("ROLE_USER"));
+        userInfoResponse2 = new UserInfoResponse(2L, "testuser2", "test@user2.se", Collections.singletonList("ROLE_USER"));
         List<UserInfoResponse> userList = Arrays.asList(userInfoResponse1, userInfoResponse2);
         given(service.getAllUsers()).willReturn(userList);
 
@@ -59,7 +59,7 @@ class UserControllerTest {
 
     @Test
     void getUserById() throws Exception{
-        userInfoResponse1 = new UserInfoResponse(1L, "testuser1", "test@user2.se", null);
+        userInfoResponse1 = new UserInfoResponse(1L, "testuser1", "test@user2.se", Collections.singletonList("ROLE_USER"));
         List<UserInfoResponse> userList = Arrays.asList(userInfoResponse1);
         given(service.getUserById(Mockito.any())).willReturn(userList);
 
@@ -72,7 +72,7 @@ class UserControllerTest {
 
     @Test
     void registerUser() throws Exception {
-        signupRequest = new SignupRequest("test", "test@test.se", "123123", null);
+        signupRequest = new SignupRequest("test", "test@test.se", "123123", Collections.singleton("ROLE_USER"));
         user = new User(signupRequest.getUsername(), signupRequest.getEmail(), signupRequest.getPassword());
         given(service.registerUser(Mockito.any())).willReturn(user);
 
@@ -84,6 +84,15 @@ class UserControllerTest {
     }
 
     @Test
-    void updateUser() {
+    void updateUser() throws Exception {
+        user = new User("test", "test@test.se", "123123");
+        user.setId(1L);
+        given(service.updateUser(Mockito.anyLong(),Mockito.any())).willReturn("Update was successful!");
+
+        mvc.perform(put("/api/v1/user/update_profile/1").contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(user))).andExpect(status().isOk())
+                .andExpect(jsonPath("$", is("Update was successful!")));
+        verify(service, VerificationModeFactory.times(1)).updateUser(Mockito.anyLong(), Mockito.any());
+        reset(service);
     }
 }

@@ -31,17 +31,15 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public ResponseEntity<String> updateUser(Long id, User user) {
+    public String updateUser(Long id, User user) {
         if (userRepository.findById(id).isPresent()) {
             user.setUsername(user.getUsername());
             user.setEmail(user.getEmail());
             passwordEncoder.encode(user.getPassword());
-
             userRepository.save(user);
-            return ResponseEntity.ok().body("User: " + user.getUsername() + " was successfully updated.");
-
+            return "Update was successful!";
         }
-        return ResponseEntity.badRequest().body("User with id '" + user.getId() + "' does not exist.");
+        throw new RuntimeException("User with id '" + user.getId() + "' does not exist.");
     }
 
     public List<UserInfoResponse> getUserById(Long id) {
