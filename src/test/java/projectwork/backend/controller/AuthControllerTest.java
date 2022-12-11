@@ -52,9 +52,9 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
-        registerUrl = "http://localhost:8080/api/v1/register";
-        loginUrl = "http://localhost:8080/api/v1/login";
-        logoutUrl = "http://localhost:8080/api/v1/logout";
+        registerUrl = "http://localhost:8080/api/v1/auth/register";
+        loginUrl = "http://localhost:8080/api/v1/auth/login";
+        logoutUrl = "http://localhost:8080/api/v1/auth/logout";
     }
 
     @Test
