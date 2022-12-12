@@ -49,11 +49,11 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        getUsersUrl = "http://localhost:8080/api/v1/user/users";
-        getUserByIdUrl = "http://localhost:8080/api/v1/user/1";
-        registerUserUrl = "http://localhost:8080/api/v1/user/register";
-        updateUserUrl = "http://localhost:8080/api/v1/user/update_profile/1";
-        deleteUserUrl = "http://localhost:8080/api/v1/user/delete/1";
+        getUsersUrl = "/api/v1/user/users";
+        getUserByIdUrl = "/api/v1/user/1";
+        registerUserUrl = "/api/v1/user/register";
+        updateUserUrl = "/api/v1/user/update_profile/1";
+        deleteUserUrl = "/api/v1/user/delete/1";
     }
 
     @Test
