@@ -38,6 +38,6 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Register a new user account")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
-        return authService.signup(signupRequest);
+        return ResponseEntity.ok(authService.signup(signupRequest));
     }
 }

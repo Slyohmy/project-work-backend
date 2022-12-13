@@ -2,9 +2,8 @@ package projectwork.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan(basePackages = {"projectwork.backend.controller"})
+//@ComponentScan(basePackages = {"projectwork.backend.controller"})
 @SpringBootApplication
 public class BackendApplication {
 

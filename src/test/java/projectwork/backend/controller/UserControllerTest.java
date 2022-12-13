@@ -1,5 +1,6 @@
 package projectwork.backend.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import projectwork.backend.JsonUtil;
 import projectwork.backend.model.User;
 import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.payload.UserInfoResponse;
@@ -39,6 +41,20 @@ class UserControllerTest {
     static UserInfoResponse userInfoResponse1;
     static UserInfoResponse userInfoResponse2;
     static SignupRequest signupRequest;
+    static String getUsersUrl;
+    static String getUserByIdUrl;
+    static String registerUserUrl;
+    static String updateUserUrl;
+    static String deleteUserUrl;
+
+    @BeforeEach
+    void setUp() {
+        getUsersUrl = "/api/v1/user/users";
+        getUserByIdUrl = "/api/v1/user/1";
+        registerUserUrl = "/api/v1/user/register";
+        updateUserUrl = "/api/v1/user/update_profile/1";
+        deleteUserUrl = "/api/v1/user/delete/1";
+    }
 
     @Test
     void getAllUsers() throws Exception {
@@ -47,7 +63,8 @@ class UserControllerTest {
         List<UserInfoResponse> userList = Arrays.asList(userInfoResponse1, userInfoResponse2);
         given(service.getAllUsers()).willReturn(userList);
 
-        mvc.perform(get("/api/v1/user/users").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get(getUsersUrl)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].username", is(userInfoResponse1.getUsername())))
                 .andExpect(jsonPath("$[1].username", is(userInfoResponse2.getUsername())));
@@ -61,8 +78,10 @@ class UserControllerTest {
         List<UserInfoResponse> userList = Arrays.asList(userInfoResponse1);
         given(service.getUserById(Mockito.any())).willReturn(userList);
 
-        mvc.perform(get("/api/v1/user/1").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(1)))
+        mvc.perform(get(getUserByIdUrl)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].username", is(userInfoResponse1.getUsername())));
         verify(service, VerificationModeFactory.times(1)).getUserById(Mockito.any());
         reset(service);
@@ -74,8 +93,10 @@ class UserControllerTest {
         user = new User(signupRequest.getUsername(), signupRequest.getEmail(), signupRequest.getPassword());
         given(service.registerUser(Mockito.any())).willReturn(user);
 
-        mvc.perform(post("/api/v1/user/register").contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(user))).andExpect(status().isOk())
+        mvc.perform(post(registerUserUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(user)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is("New account: test has been successfully created.")));
         verify(service, VerificationModeFactory.times(1)).registerUser(Mockito.any());
         reset(service);
@@ -87,8 +108,10 @@ class UserControllerTest {
         user.setId(1L);
         given(service.updateUser(Mockito.anyLong(), Mockito.any())).willReturn("Update was successful!");
 
-        mvc.perform(put("/api/v1/user/update_profile/1").contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(user))).andExpect(status().isOk())
+        mvc.perform(put(updateUserUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(user)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is("Update was successful!")));
         verify(service, VerificationModeFactory.times(1)).updateUser(Mockito.anyLong(), Mockito.any());
         reset(service);
@@ -102,8 +125,10 @@ class UserControllerTest {
         response.put("deleted", Boolean.TRUE);
         given(service.deleteUserById(Mockito.anyLong())).willReturn(response);
 
-        mvc.perform(delete("/api/v1/user/delete/1").contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.toJson(user))).andExpect(status().isOk())
+        mvc.perform(delete(deleteUserUrl)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonUtil.toJson(user)))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is(response)));
         verify(service, VerificationModeFactory.times(1)).deleteUserById(Mockito.anyLong());
         reset(service);

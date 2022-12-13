@@ -27,14 +27,14 @@ class UserServiceTest {
     @MockBean
     private UserService userService;
 
-    static UserInfoResponse user;
+    static UserInfoResponse user1;
     static UserInfoResponse user2;
     static SignupRequest signupRequest;
 
     @Test
     void getAllUsers() {
-        List<UserInfoResponse> userList = Arrays.asList(user, user2);
-        user = new UserInfoResponse(1L, "testuser1", "testuser1@gmail.com", null);
+        List<UserInfoResponse> userList = Arrays.asList(user1, user2);
+        user1 = new UserInfoResponse(1L, "testuser1", "testuser1@gmail.com", null);
         user2 = new UserInfoResponse(2L, "testuser2", "estuser2@gmail.com", null);
 
         given(userService.getAllUsers()).willReturn(userList);
@@ -44,14 +44,13 @@ class UserServiceTest {
     @Test
     @Disabled("Needs to be fixed")
     void updateUser() {
-
         ArgumentCaptor<User> userArgument =
                 ArgumentCaptor.forClass(User.class);
 
         // When
         User newUser = new User();
         newUser.setUsername("testname");
-        String updatedUser = this.userService.updateUser(user.getId(), newUser);
+        String updatedUser = this.userService.updateUser(user1.getId(), newUser);
 
         System.out.println(updatedUser);
         System.out.println(userArgument.getAllValues());
@@ -80,7 +79,6 @@ class UserServiceTest {
     @Test
     @Disabled("Needs to be fixed")
     void registerUser() {
-
         User newUser = new User(signupRequest.getUsername(), signupRequest.getEmail(), signupRequest.getPassword());
         User responseEntity = userService.registerUser(signupRequest);
 
