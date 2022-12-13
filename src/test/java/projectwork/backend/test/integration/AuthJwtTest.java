@@ -1,4 +1,4 @@
-package projectwork.backend.test.intergration;
+package projectwork.backend.test.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
@@ -16,6 +16,9 @@ import projectwork.backend.payload.LoginRequest;
 
 import java.util.Objects;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import({ObjectMapper.class, AuthController.class})
@@ -31,7 +34,6 @@ class AuthJwtTest {
     static String loginUrl;
     static String logoutUrl;
 
-
     @BeforeEach
     public void setUp() {
         registerUrl = "/api/v1/auth/register";
@@ -42,15 +44,14 @@ class AuthJwtTest {
     @Test
     @Order(1)
     void login() throws Exception {
-        LoginRequest defaultAuth = new LoginRequest("slyohmy", "123123");
-
-        System.out.println(objectMapper.writeValueAsString(defaultAuth));
+        LoginRequest loginRequest = new LoginRequest("slyohmy", "123123");
+        System.out.println(objectMapper.writeValueAsString(loginRequest));
 
         MvcResult result = this.mvc
                 .perform(MockMvcRequestBuilders.post(loginUrl)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(defaultAuth)))
+                        .content(objectMapper.writeValueAsBytes(loginRequest)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -59,7 +60,17 @@ class AuthJwtTest {
     }
 
     @Test
-    void logout() {
-    }
+    @Order(2)
+    void logout() throws Exception {
+        MvcResult result = this.mvc
+                .perform(MockMvcRequestBuilders.post(logoutUrl)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$", is("Logged out")))
+                .andReturn();
 
+        String cookie = Objects.requireNonNull(result.getResponse().getCookie("slyohmy")).getValue();
+        System.out.println("Cookie: " + cookie);
+    }
 }
