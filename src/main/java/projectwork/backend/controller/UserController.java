@@ -38,16 +38,14 @@ public class UserController {
 
     @PostMapping("/register")
     @Operation(summary = "Create new user or admin account")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
-        userService.registerUser(signupRequest);
-        return ResponseEntity.ok("New account: " + signupRequest.getUsername() +
-                " has been successfully created.");
+    public ResponseEntity<User> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+        return ResponseEntity.ok(userService.registerUser(signupRequest));
     }
 
     @PutMapping("/update_profile/{id}")
     @Operation(summary = "Update a user profile")
     public ResponseEntity<String> updateUser(@PathVariable(value = "id", required = false) Long id,
-                                             @RequestBody User user) {
+                                             @RequestBody(required = false) User user) {
         return ResponseEntity.ok(userService.updateUser(id, user));
     }
 

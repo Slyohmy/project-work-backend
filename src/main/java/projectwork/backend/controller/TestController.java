@@ -13,9 +13,10 @@ public class TestController {
 
     @GetMapping
     public String allAccess() {
-        return "Public Content.";
+        return "Home Page";
     }
     @GetMapping("/profile")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public String profile() {
         return "User Profile";
     }
@@ -23,12 +24,6 @@ public class TestController {
     @GetMapping("/user")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public String userAccess() {
-        return "User Content.";
-    }
-
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String adminAccess() {
-        return "Admin Board.";
+        return "User Content";
     }
 }

@@ -97,7 +97,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(user)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is("New account: test has been successfully created.")));
+                .andExpect(jsonPath("$.username", is(user.getUsername())));
         verify(service, VerificationModeFactory.times(1)).registerUser(Mockito.any());
         reset(service);
     }
