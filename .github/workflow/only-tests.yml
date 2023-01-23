@@ -24,4 +24,4 @@
                 run: mvn -B -version package --file pom.xml
 
               - name: All the Tests and coverage Checks
-                uses: mvn clean install
+                uses: mvn test
