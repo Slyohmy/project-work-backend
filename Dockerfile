@@ -1,4 +1,4 @@
-FROM openjdk:18 as build
+FROM maven:latest as build
 COPY . /backend
 WORKDIR /backend
 RUN mvn clean install --file pom.xml
