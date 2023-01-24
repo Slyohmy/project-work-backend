@@ -1,7 +1,7 @@
-FROM maven:4.0.0 as build
+FROM openjdk:18 as build
 COPY . /backend
 WORKDIR /backend
-RUN mvn clean install
+RUN mvn clean install --file pom.xml
 
 FROM openjdk:18
 COPY --from=build /backend/target/backend-0.0.1-SNAPSHOT.jar backend.jar
