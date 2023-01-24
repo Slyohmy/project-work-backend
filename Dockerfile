@@ -1,4 +1,4 @@
-FROM maven:3.6.3-jdk-18-slim as build
+FROM maven:4.0.0 as build
 COPY . /backend
 WORKDIR /backend
 RUN mvn clean install
