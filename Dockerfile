@@ -1,4 +1,5 @@
 FROM maven:3.8.1 AS build
+EXPOSE 8080
 
 COPY . /project-work
 COPY pom.xml /project-work/src
