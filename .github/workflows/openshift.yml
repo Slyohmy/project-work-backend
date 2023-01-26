@@ -45,7 +45,7 @@ env:
 
   # 🖊️ EDIT to change the image registry settings.
   # Registries such as GHCR, Quay.io, and Docker Hub are supported.
-  IMAGE_REGISTRY: ghcr.io/slyohmy
+  IMAGE_REGISTRY: docker.io/slyohmy
   IMAGE_REGISTRY_USER: slyohmy
   IMAGE_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
