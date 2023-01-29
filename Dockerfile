@@ -21,7 +21,7 @@
 #ENV MYSQL_ROOT_PASSWORD=password
 #ENV MYSQL_DATABASE=projectwork
 
-FROM openjdk:14.0.1
+FROM openjdk:17.0
 ADD target/backend-0.0.1-SNAPSHOT.jar backend.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "backend.jar"]
