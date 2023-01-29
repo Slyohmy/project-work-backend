@@ -1,27 +1,27 @@
-#FROM maven:3.8.1 AS build
-#EXPOSE 8080
+FROM maven:3.8.1 AS build
+EXPOSE 8080
 
-#COPY . /project-work
-#COPY pom.xml /project-work/pom.xml
+COPY . /project-work
+COPY pom.xml /project-work/pom.xml
 
-#WORKDIR /project-work
+WORKDIR /project-work
 
 # build the application
-#RUN mvn -e -B clean package -DskipTests
+RUN mvn -e -B clean package -DskipTests
 
-#FROM openjdk:14.0.1
+FROM openjdk:17.0
 
-#COPY --from=build /project-work/target/*.jar app.jar
+COPY --from=build /project-work/target/*.jar app.jar
 
 # set the entrypoint
-#ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
 #ENV MYSQL_USER=simon
 #ENV MYSQL_PASSWORD=password
 #ENV MYSQL_ROOT_PASSWORD=password
 #ENV MYSQL_DATABASE=projectwork
 
-FROM openjdk:17.0
-ADD target/backend-0.0.1-SNAPSHOT.jar backend.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "backend.jar"]
+#FROM openjdk:17.0
+#ADD target/backend-0.0.1-SNAPSHOT.jar backend.jar
+#EXPOSE 8080
+#ENTRYPOINT ["java", "-jar", "backend.jar"]
