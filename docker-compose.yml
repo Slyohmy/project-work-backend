@@ -1,0 +1,29 @@
+#version: '3'
+#services:
+#
+#  db:
+#    image: mysql
+#    container_name: mysql-container
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: password
+#      MYSQL_DATABASE: projectwork
+#    ports:
+#      - "3307:3306"
+#    networks:
+#      - app-network
+#
+#
+#  backend:
+#    container_name: backend-container
+#    build: .
+#    depends_on:
+#      - db
+#    restart: always
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - app-network
+#
+#networks:
+#  app-network:
