@@ -11,10 +11,10 @@ RUN mvn -e -B clean package -DskipTests
 
 FROM openjdk:18.0.1.1
 
-COPY --from=build /project-work/target/*.jar app.jar
+COPY --from=build /project-work/target/backend-0.0.1-SNAPSHOT.jar backend.jar
 
 # set the entrypoint
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "backend.jar"]
 
 #ENV MYSQL_USER=simon
 #ENV MYSQL_PASSWORD=password
