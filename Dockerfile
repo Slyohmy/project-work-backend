@@ -36,13 +36,13 @@
 FROM openjdk:18.0.1
 
 # Set the working directory
-WORKDIR /projectwork
+WORKDIR /project-work
 
 # Copy the jar file to the working directory
-COPY target/backend.jar /projectwork/backend.jar
+COPY target/backend.jar /project-work/backend.jar
 
 # Set environment variables
-ENV SPRING_DATASOURCE_URL=jdbc:mysql://${MYSQL_HOST:localhost}:3306/${MYSQL_DATABASE:projectwork}
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/projectwork
 ENV SPRING_DATASOURCE_USERNAME=root
 ENV SPRING_DATASOURCE_PASSWORD=password
 
