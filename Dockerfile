@@ -9,7 +9,7 @@ WORKDIR /project-work
 # build the application
 RUN mvn -e -B clean package -DskipTests
 
-FROM openjdk:17.0
+FROM openjdk:18
 
 COPY --from=build /project-work/target/*.jar app.jar
 
