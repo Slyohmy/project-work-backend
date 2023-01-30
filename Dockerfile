@@ -57,7 +57,7 @@
 #CMD ["java","-jar","backend.jar"]
 
 FROM openjdk:18
-ADD ./target/backend.jar backend.jar
+ADD /target/backend.jar backend.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "backend.jar"]
 
