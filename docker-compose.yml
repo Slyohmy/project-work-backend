@@ -1,29 +1,68 @@
-version: '3'
-services:
+#version: '3'
+#services:
+#
+#  db:
+#    image: mysql
+#    container_name: mysql-container
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: password
+#      MYSQL_DATABASE: projectwork
+#    ports:
+#      - "3307:3306"
+#    networks:
+#      - app-network
+#
+#
+#  backend:
+#    container_name: backend-container
+#    build: .
+#    depends_on:
+#      - db
+#    restart: always
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - app-network
+#
+#networks:
+#  app-network:
+#
+#version: "3"
+#services:
+#  backend:
+#    image: backend
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - api-mysql
+#    depends_on:
+#      - mysqldb
+#
+#  mysqldb:
+#    image: mysql
+#    networks:
+#      - api-mysql
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=root
+#      - MYSQL_DATABASE=projectwork
+#
+#networks:
+#  api-mysql:
 
-  db:
-    image: mysql
-    container_name: mysql-container
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: projectwork
-    ports:
-      - "3307:3306"
-    networks:
-      - app-network
-
-
-  backend:
-    container_name: backend-container
-    build: .
-    depends_on:
-      - db
-    restart: always
-    ports:
-      - "8080:8080"
-    networks:
-      - app-network
-
-networks:
-  app-network:
+#version: '3'
+#services:
+#  mysql:
+#    image: mysql
+#    environment:
+#      MYSQL_ROOT_PASSWORD: password
+#      MYSQL_DATABASE: projectwork
+#      MYSQL_USER: simon
+#      MYSQL_PASSWORD: password
+#
+#  backend:
+#    build: .
+#    ports:
+#      - "8080:8080"
+#    links:
+#      - mysql

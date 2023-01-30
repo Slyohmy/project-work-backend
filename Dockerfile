@@ -33,23 +33,32 @@
 #CMD ["java", "-jar", "backend.jar"]
 
 # Use an openjdk image as the base image
-FROM openjdk:18.0.1
+#FROM openjdk:18.0.1
 
 # Set the working directory
-WORKDIR /project-work
+#WORKDIR /project-work
 
 # Copy the jar file to the working directory
-COPY /target/backend.jar /project-work/backend.jar
+#COPY /target/backend.jar /project-work/backend.jar
 
 # Set environment variables
-ENV SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/projectwork
-ENV SPRING_DATASOURCE_USERNAME=root
-ENV SPRING_DATASOURCE_PASSWORD=password
+#ENV spring_datasource_url=jdbc:mysql://localhost:3306/projectwork
+#ENV spring_datasource_username=root
+#ENV spring_datasource_password=password
 
 # Expose port 8080 for the application
-EXPOSE 8080
+#EXPOSE 8080
 
 # Run the application
-CMD ["java", "-jar", "backend.jar"]
+#CMD ["java", "-jar", "backend.jar"]
+
+#FROM openjdk:18.0.1
+#COPY ./target/backend.jar backend.jar
+#CMD ["java","-jar","backend.jar"]
+
+FROM openjdk:18
+ADD ./target/backend.jar backend.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "backend.jar"]
 
 
