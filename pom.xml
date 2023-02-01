@@ -81,7 +81,7 @@
                 <configuration>
                     <finalName>backend</finalName>
                 </configuration>
-                <version>${project.parent.version}</version>
+                <!--version>${project.parent.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,7 +90,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
-                </configuration>
+                </configuration-->
             </plugin>
         </plugins>
     </build>
