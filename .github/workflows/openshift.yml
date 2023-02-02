@@ -6,14 +6,14 @@ env:
   OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
   OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE }}
 
-  APP_NAME: ""
-  APP_PORT: ""
+  APP_NAME: "backend"
+  APP_PORT: "8080"
 
   IMAGE_REGISTRY: ghcr.io/slyohmy
   IMAGE_REGISTRY_USER: slyohmy
-  IMAGE_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  IMAGE_REGISTRY_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
 
-  IMAGE_TAGS: ""
+  IMAGE_TAGS: "latest"
 
 on:
   workflow_dispatch:
@@ -47,7 +47,7 @@ jobs:
           }
           else {
             core.info("A registry password is required");
-            secrets["IMAGE_REGISTRY_PASSWORD"] = `${{ secrets.GITHUB_TOKEN }}`;
+            secrets["IMAGE_REGISTRY_PASSWORD"] = `${{ secrets.IMAGE_REGISTRY_PASSWORD }}`;
           }
 
           const missingSecrets = Object.entries(secrets).filter(([ name, value ]) => {
