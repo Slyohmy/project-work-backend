@@ -11,7 +11,7 @@ env:
 
   IMAGE_REGISTRY: ghcr.io/slyohmy
   IMAGE_REGISTRY_USER: slyohmy
-  IMAGE_REGISTRY_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
+  IMAGE_REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
   IMAGE_TAGS: ""
 
@@ -47,7 +47,7 @@ jobs:
           }
           else {
             core.info("A registry password is required");
-            secrets["IMAGE_REGISTRY_PASSWORD"] = `${{ secrets.IMAGE_REGISTRY_PASSWORD }}`;
+            secrets["IMAGE_REGISTRY_PASSWORD"] = `${{ secrets.GITHUB_TOKEN }}`;
           }
 
           const missingSecrets = Object.entries(secrets).filter(([ name, value ]) => {
