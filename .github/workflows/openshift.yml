@@ -9,8 +9,8 @@ env:
   APP_NAME: ""
   APP_PORT: ""
 
-  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-  IMAGE_REGISTRY_USER: ${{ github.actor }}
+  IMAGE_REGISTRY: ghcr.io/slyohmy
+  IMAGE_REGISTRY_USER: slyohmy
   IMAGE_REGISTRY_PASSWORD: ${{ secrets.IMAGE_REGISTRY_PASSWORD }}
 
   IMAGE_TAGS: ""
