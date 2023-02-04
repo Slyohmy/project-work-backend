@@ -7,7 +7,7 @@ env:
   OPENSHIFT_NAMESPACE: ${{ secrets.OPENSHIFT_NAMESPACE }}
 
   APP_NAME: ""
-  APP_PORT: "8080"
+  APP_PORT: ""
 
   IMAGE_REGISTRY: docker.io/slyohmy
   IMAGE_REGISTRY_USER: slyohmy
@@ -83,7 +83,6 @@ jobs:
       run: |
         echo "IMAGE_TAGS=latest ${GITHUB_SHA::12}" | tee -a $GITHUB_ENV
 
-
     - name: Build from Dockerfile
       id: build-image
       uses: redhat-actions/buildah-build@v2
@@ -94,7 +93,6 @@ jobs:
         dockerfiles: |
           ./Dockerfile
 
-    # https://github.com/redhat-actions/push-to-registry#readme
     - name: Push to registry
       id: push-image
       uses: redhat-actions/push-to-registry@v2
@@ -105,13 +103,11 @@ jobs:
         username: ${{ env.IMAGE_REGISTRY_USER }}
         password: ${{ env.IMAGE_REGISTRY_PASSWORD }}
 
-    # The path the image was pushed to is now stored in ${{ steps.push-image.outputs.registry-path }}
     - name: Install oc
       uses: redhat-actions/openshift-tools-installer@v1
       with:
         oc: 4
 
-    # https://github.com/redhat-actions/oc-login#readme
     - name: Log in to OpenShift
       uses: redhat-actions/oc-login@v1
       with:
@@ -120,15 +116,15 @@ jobs:
         insecure_skip_tls_verify: true
         namespace: ${{ env.OPENSHIFT_NAMESPACE }}
 
-    # This step should create a deployment, service, and route to run your app and expose it to the internet.
-    - name: Create and expose app
-      id: deploy-and-expose
-      uses: redhat-actions/oc-new-app@v1
-      with:
-        app_name: ${{ env.APP_NAME }}
-        image: ${{ steps.push-image.outputs.registry-path }}
-        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
-        port: ${{ env.APP_PORT }}
+    - name: Deploy and Apply Kompose Files
+      run: |
+        oc apply -f api-deploymentconfig.yaml
+        oc apply -f api-imagestream.yaml
+        oc apply -f api-service.yaml
+        oc apply -f env-configmap.yaml
+        oc apply -f mysql-db-deploymentconfig.yaml
+        oc apply -f mysql-db-imagestream.yaml
+        oc apply -f mysql-db-service.yaml
 
     - name: Print application URL
       env:
@@ -141,4 +137,26 @@ jobs:
         echo ${{ env.ROUTE }}
         echo "==================================================================================="
         echo
-        echo "Your app can be taken down with: \"oc delete all --selector='${{ env.SELECTOR }}'\""
+        echo "Your app can be taken down with: 'oc delete all --selector='${{ env.SELECTOR }}''"
+
+#    - name: Create and expose app
+#      id: deploy-and-expose
+#      uses: redhat-actions/oc-new-app@v1
+#      with:
+#        app_name: ${{ env.APP_NAME }}
+#        image: ${{ steps.push-image.outputs.registry-path }}
+#        namespace: ${{ env.OPENSHIFT_NAMESPACE }}
+#        port: ${{ env.APP_PORT }}
+#
+#    - name: Print application URL
+#      env:
+#        ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
+#        SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
+#      run: |
+#        [[ -n ${{ env.ROUTE }} ]] || (echo "Determining application route failed in previous step"; exit 1)
+#        echo
+#        echo "======================== Your application is available at: ========================"
+#        echo ${{ env.ROUTE }}
+#        echo "==================================================================================="
+#        echo
+#        echo "Your app can be taken down with: \"oc delete all --selector='${{ env.SELECTOR }}'\""
