@@ -127,7 +127,7 @@ jobs:
 
     - name: Print application URL
       env:
-        ROUTE: ${{ steps.deploy-and-expose.outputs.route }}
+        ROUTE: ${{ steps.deploy-and-apply.outputs.route }}
         SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
       run: |
         [[ -n ${{ env.ROUTE }} ]] || (echo "Determining application route failed in previous step"; exit 1)
