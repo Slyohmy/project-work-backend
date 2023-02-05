@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: api
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: api
+  strategy:
+    resources: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.service: api
+    spec:
+      containers:
+        - name: backend-container
+          image: docker.io/slyohmy/project-work-backend:latest
+          envFrom:
+            - configMapRef:
+                name: env
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 5
+            failureThreshold: 5
+          resources: {}
+      restartPolicy: Always
+status: {}
