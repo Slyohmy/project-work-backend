@@ -3,6 +3,7 @@ data:
   MYSQL_DATABASE: projectwork
   MYSQL_HOST: localhost
   MYSQL_PASSWORD: password
+  MYSQL_ROOT_PASSWORD: password
   MYSQL_USER: root
   SPRING_DATASOURCE_PASSWORD: password
   SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/projectwork?createDatabaseIfNotExist=true
