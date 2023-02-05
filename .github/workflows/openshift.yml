@@ -136,7 +136,7 @@ jobs:
         echo ${{ env.ROUTE }}
         echo "==================================================================================="
         echo
-        echo "Your app can be taken down with: 'oc delete all --selector='${{ env.SELECTOR }}''"
+        echo "Your app can be taken down with: \"oc delete all --selector='${{ env.SELECTOR }}'\""
 
 #    - name: Create and expose app
 #      id: deploy-and-expose

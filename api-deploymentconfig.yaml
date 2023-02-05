@@ -27,6 +27,16 @@ spec:
                 name: env
           ports:
             - containerPort: 8080
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "mysqladmin ping -h mysql-db -u root --password=$MYSQL_PASSWORD"
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 5
+            failureThreshold: 5
           resources: {}
       restartPolicy: Always
 status: {}
