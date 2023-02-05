@@ -123,7 +123,7 @@ jobs:
         oc apply -f mysql-db-imagestream.yaml
         oc apply -f mysql-db-service.yaml
         oc apply -f api-deploymentconfig.yaml
-        oc apply -f api-imagestream.yaml
+#        oc apply -f api-imagestream.yaml
         oc apply -f api-service.yaml
 
     - name: Print application URL
