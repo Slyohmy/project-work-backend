@@ -9,7 +9,10 @@ data:
   SPRING_DATASOURCE_USERNAME: root
 kind: ConfigMap
 metadata:
+  name: env
+  namespace: slymo-dev
   creationTimestamp: null
   labels:
     io.kompose.service: api-env
-  name: env
+
+

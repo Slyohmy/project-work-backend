@@ -22,57 +22,24 @@ spec:
         io.kompose.service: api
     spec:
       containers:
-      - env:
-        - name: MYSQL_DATABASE
-          valueFrom:
-            configMapKeyRef:
-              key: MYSQL_DATABASE
-              name: env
-        - name: MYSQL_HOST
-          valueFrom:
-            configMapKeyRef:
-              key: MYSQL_HOST
-              name: env
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            configMapKeyRef:
-              key: MYSQL_PASSWORD
-              name: env
-        - name: MYSQL_USER
-          valueFrom:
-            configMapKeyRef:
-              key: MYSQL_USER
-              name: env
-        - name: SPRING_DATASOURCE_PASSWORD
-          valueFrom:
-            configMapKeyRef:
-              key: SPRING_DATASOURCE_PASSWORD
-              name: env
-        - name: SPRING_DATASOURCE_URL
-          valueFrom:
-            configMapKeyRef:
-              key: SPRING_DATASOURCE_URL
-              name: env
-        - name: SPRING_DATASOURCE_USERNAME
-          valueFrom:
-            configMapKeyRef:
-              key: SPRING_DATASOURCE_USERNAME
-              name: env
-        image: docker.io/slyohmy/project-work-backend:latest
-        name: backend-container
-        ports:
-        - containerPort: 8080
-        resources: {}
+        - name: backend-container
+          image: docker.io/slyohmy/project-work-backend:latest
+          envFrom:
+            - configMapRef:
+                name: env
+          ports:
+            - containerPort: 8080
+          resources: {}
       restartPolicy: Always
   test: false
   triggers:
-  - type: ConfigChange
-  - imageChangeParams:
-      automatic: true
-      containerNames:
-      - backend-container
-      from:
-        kind: ImageStreamTag
-        name: api:latest
-    type: ImageChange
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - backend-container
+        from:
+          kind: ImageStreamTag
+          name: api:latest
+      type: ImageChange
 status: {}
