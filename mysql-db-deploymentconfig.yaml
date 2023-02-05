@@ -1,54 +1,39 @@
 apiVersion: v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert --provider=openshift
-    kompose.version: 1.21.0 (992df58d8)
-  creationTimestamp: null
-  labels:
-    io.kompose.service: mysql-db
   name: mysql-db
+  labels:
+    app: mysql-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: mysql-db
-  strategy:
-    resources: {}
+      app: mysql-db
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        io.kompose.service: mysql-db
+        app: mysql-db
     spec:
       containers:
-      - env:
-        - name: MYSQL_DATABASE
-        - name: MYSQL_ROOT_PASSWORD
-        image: docker.io/slyohmy/project-work-backend:latest
-        livenessProbe:
-          exec:
-            command:
-            - mysqladmin
-            - ping
-            - -h
-            - localhost
-          failureThreshold: 10
-          timeoutSeconds: 20
-        name: mysql-db-container
-        ports:
-        - containerPort: 3306
-        resources: {}
-      restartPolicy: Always
-  test: false
-  triggers:
-  - type: ConfigChange
-  - imageChangeParams:
-      automatic: true
-      containerNames:
-      - mysql-db-container
-      from:
-        kind: ImageStreamTag
-        name: mysql-db:latest
-    type: ImageChange
-status: {}
+        - name: mysql-db-container
+          image: docker.io/slyohmy/project-work-backend:latest
+          env:
+            - name: MYSQL_DATABASE
+            - name: MYSQL_ROOT_PASSWORD
+          ports:
+            - containerPort: 3306
+          livenessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            failureThreshold: 10
+            timeoutSeconds: 20
+          restartPolicy: Always
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
