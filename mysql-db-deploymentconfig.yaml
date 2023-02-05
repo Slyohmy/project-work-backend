@@ -24,7 +24,7 @@ spec:
       - env:
         - name: MYSQL_DATABASE
         - name: MYSQL_ROOT_PASSWORD
-        image: ' '
+        image: docker.io/slyohmy/project-work-backend:latest
         livenessProbe:
           exec:
             command:
