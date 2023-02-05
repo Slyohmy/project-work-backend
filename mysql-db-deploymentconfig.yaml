@@ -19,7 +19,15 @@ spec:
           image: docker.io/slyohmy/project-work-backend:latest
           env:
             - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: env
+                  key: MYSQL_DATABASE
             - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: env
+                  key: MYSQL_ROOT_PASSWORD
           ports:
             - containerPort: 3306
           livenessProbe:
