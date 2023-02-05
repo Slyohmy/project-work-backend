@@ -119,9 +119,9 @@ jobs:
     - name: Deploy and Apply Kompose Files
       run: |
         oc apply -f env-configmap.yaml
-        oc apply -f mysql-db-deploymentconfig.yaml
+        oc apply -f mysql-db-deployment.yaml
         oc apply -f mysql-db-service.yaml
-        oc apply -f api-deploymentconfig.yaml
+        oc apply -f api-deployment.yaml
         oc apply -f api-service.yaml
 
 
