@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: mysql-db-container
-          image: docker.io/slyohmy/project-work-backend:latest
+          image: mysql
           env:
             - name: MYSQL_DATABASE
               valueFrom:
