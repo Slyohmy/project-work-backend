@@ -28,11 +28,8 @@ spec:
           ports:
             - containerPort: 8080
           readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "mysqladmin ping -h mysql-db -u root --password=$MYSQL_PASSWORD"
+            tcpSocket:
+              port: 8080
             initialDelaySeconds: 5
             timeoutSeconds: 5
             periodSeconds: 5

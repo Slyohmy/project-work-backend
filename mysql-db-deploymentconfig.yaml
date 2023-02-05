@@ -33,10 +33,14 @@ spec:
           livenessProbe:
             exec:
               command:
-                - mysqladmin
-                - ping
+                - mysql
                 - -h
                 - localhost
+                - -u
+                - root
+                - --password=$MYSQL_ROOT_PASSWORD
+                - -e
+                - "SELECT 1;"
             failureThreshold: 10
             timeoutSeconds: 20
           restartPolicy: Always
