@@ -120,7 +120,6 @@ jobs:
       run: |
         oc apply -f env-configmap.yaml
         oc apply -f mysql-db-deploymentconfig.yaml
-        oc apply -f mysql-db-imagestream.yaml
         oc apply -f mysql-db-service.yaml
         oc apply -f api-deploymentconfig.yaml
         oc apply -f api-service.yaml
@@ -128,7 +127,7 @@ jobs:
     - name: Print application URL
       env:
         ROUTE: ${{ steps.deploy-and-apply.outputs.route }}
-        SELECTOR: ${{ steps.deploy-and-expose.outputs.selector }}
+        SELECTOR: ${{ steps.deploy-and-apply.outputs.selector }}
       run: |
         [[ -n ${{ env.ROUTE }} ]] || (echo "Determining application route failed in previous step"; exit 1)
         echo
