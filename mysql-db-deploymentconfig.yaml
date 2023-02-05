@@ -1,5 +1,5 @@
-apiVersion: image.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   annotations:
     kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert --provider=openshift

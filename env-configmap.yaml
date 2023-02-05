@@ -1,4 +1,4 @@
-apiVersion: image.openshift.io/v1
+apiVersion: apps/v1
 data:
   MYSQL_DATABASE: projectwork
   MYSQL_HOST: localhost
