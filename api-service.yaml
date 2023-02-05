@@ -10,10 +10,12 @@ metadata:
   name: api
 spec:
   ports:
-  - name: "8080"
-    port: 8080
-    targetPort: 8080
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
   selector:
     io.kompose.service: api
+  networkAlias:
+    - backend-api
 status:
   loadBalancer: {}

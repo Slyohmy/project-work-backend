@@ -10,10 +10,12 @@ metadata:
   name: mysql-db
 spec:
   ports:
-  - name: "3307"
-    port: 3307
-    targetPort: 3306
+    - name: "3307"
+      port: 3307
+      targetPort: 3306
   selector:
     io.kompose.service: mysql-db
+  networkAlias:
+    - backend-mysql
 status:
   loadBalancer: {}
