@@ -13,7 +13,7 @@ spec:
   selector:
     io.kompose.service: api
 network:
-  name: backend-network
+  name: project-work-network
   networkAlias:
     - backend-api
 status:

@@ -11,5 +11,8 @@ spec:
       targetPort: 3306
   selector:
     io.kompose.service: mysql-db
-  type: ClusterIP
+network:
+  name: project-work-network
+  networkAlias:
+    - mysql
 status: {}
