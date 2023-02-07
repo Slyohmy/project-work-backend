@@ -57,7 +57,6 @@ public class SecurityConfig {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers(WHITELIST).permitAll()
-                //.antMatchers("/api/v1/login", "/api/v1/**").permitAll()
                 .anyRequest().authenticated();
 
         http.headers().frameOptions().sameOrigin();
@@ -71,8 +70,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:4200",
-                "https://frontend-slymo-dev.apps.sandbox-m3.1530.p1.openshiftapps.com",
-                "https://frontend-slymo-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/**"));
+                "https://frontend-slymo-dev.apps.sandbox-m3.1530.p1.openshiftapps.com"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
