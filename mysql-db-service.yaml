@@ -12,4 +12,5 @@ spec:
   selector:
     io.kompose.service: mysql-db
   type: ClusterIP
+  network: project-work-network
 status: {}
