@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Test")
 public class TestController {
 
-    @GetMapping
+    @GetMapping("/home")
     public String allAccess() {
         return "Home Page";
     }
