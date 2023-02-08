@@ -12,18 +12,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import projectwork.backend.JsonUtil;
+import projectwork.backend.model.User;
 import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.service.AuthService;
 
 import java.util.Collections;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -51,17 +52,20 @@ class AuthControllerTest {
     @Test
     void signup() throws Exception {
         signupRequest = new SignupRequest("test", "test@test.se", "123123", Collections.singleton("ROLE_USER"));
-        given(service.signup(Mockito.any())).willReturn("Congratsulations test, you've successfully registered an account.");
+        User expectedUser = new User("test", "test@test.se", "123123");
+        given(service.signup(Mockito.any())).willReturn(expectedUser);
 
-        mvc.perform(post(registerUrl)
+        MvcResult result = mvc.perform(post(registerUrl)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(JsonUtil.toJson(signupRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is("Congratsulations test, you've successfully registered an account.")));
+                .andReturn();
+
+        User actualUser = JsonUtil.fromJson(result.getResponse().getContentAsByteArray(), User.class);
+        assertThat(actualUser).usingRecursiveComparison().isEqualTo(expectedUser);
+
         verify(service, VerificationModeFactory.times(1)).signup(Mockito.any());
         reset(service);
-
-        System.out.println("from response: " + signupRequest);
     }
 }

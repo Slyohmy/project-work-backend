@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import projectwork.backend.model.User;
 import projectwork.backend.payload.LoginRequest;
 import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.payload.UserInfoResponse;
@@ -35,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Register a new user account")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<User> signup(@Valid @RequestBody SignupRequest signupRequest) {
         return ResponseEntity.ok(authService.signup(signupRequest));
     }
 }

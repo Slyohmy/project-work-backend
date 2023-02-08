@@ -64,7 +64,7 @@ public class AuthService {
                 .body("Logged out");
     }
 
-    public String signup(SignupRequest signupRequest) {
+    public User signup(SignupRequest signupRequest) {
         if (userRepository.findByUsername(signupRequest.getUsername()).isPresent()) {
             throw new RuntimeException("Username '" + signupRequest.getUsername() + "' already exists.");
         }
@@ -75,7 +75,6 @@ public class AuthService {
         Optional<Role> role = roleRepository.findByRole(ERole.ROLE_USER);
         user.getRoles().add(role.get());
         userRepository.save(user);
-        return "Congratsulations " + signupRequest.getUsername() +
-                ", you've successfully registered an account.";
+        return user;
     }
 }

@@ -3,12 +3,10 @@ package projectwork.backend.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import projectwork.backend.payload.SignupRequest;
 import projectwork.backend.payload.UserInfoResponse;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,15 +53,5 @@ public class User {
                 roles.stream()
                         .map(role -> role.getRole().toString())
                         .collect(Collectors.toList()));
-    }
-
-    public SignupRequest signupRequest() {
-        return new SignupRequest(
-                username,
-                email,
-                password,
-                Collections.singleton(roles.stream()
-                        .map(role -> role.getRole().toString())
-                        .collect(Collectors.toSet()).toString()));
     }
 }
