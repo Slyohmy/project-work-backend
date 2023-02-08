@@ -11,4 +11,9 @@ public class JsonUtil {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return mapper.writeValueAsBytes(object);
     }
+    public static <T> T fromJson(byte[] json, Class<T> clazz) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(json, clazz);
+    }
+
 }
